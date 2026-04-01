@@ -58,7 +58,9 @@ def product_detail(request, category_slug, pk):
                 comment.save()
                 messages.success(request, "Thank you for your rating.")
 
-            return redirect(f"{reverse('product_detail', kwargs={'category_slug': category_slug, 'pk': product.pk})}?submitted=1")
+            url = reverse("product_detail", kwargs={"category_slug": category_slug, "pk": product.pk})
+            redirect_url = f"{url}?submitted=1"
+            return redirect(redirect_url)
     else:
         # If we just submitted a review, clear the form so the user starts from blank
         if request.GET.get("submitted"):
