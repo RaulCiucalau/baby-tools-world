@@ -51,6 +51,17 @@
               <span class="text-muted" title="No ratings yet">No ratings</span>
             {% endif %}
           </div>
+
+          <div class="mb-2">
+          {% if product.tags.exists %}
+            {% for tag in product.tags.all %}
+              <span class="badge bg-secondary me-1">{{ tag.name }}</span>
+            {% endfor %}
+          {% else %}
+            <span class="text-muted">No tags available</span>
+          {% endif %}
+        </div>
+
           <p class="card-text">
             {{product.description | truncatechars:80}}
           </p>
