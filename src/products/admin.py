@@ -13,6 +13,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "price", "average_rating", "rating_count", "created_at")
     list_select_related = ("category",)
+    filter_horizontal = ("tags",)
 
 
 @admin.register(Comment)
