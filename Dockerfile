@@ -12,15 +12,11 @@ ENV APP_PORT=8000
 COPY . ${_WORKDIR}
 
 # Install package dependencies for app
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt \
+    && chmod +x /app/entrypoint.sh
 
 # Switch WORKDIR to src/ in order to execute entrypoint commands from there
 WORKDIR /app/src
 
-# Run migrations and collect static files
-RUN python manage.py collectstatic --noinput && \
-    python manage.py makemigrations && \
-    python manage.py migrate
-
-EXPOSE 8000
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+EXPOSE $APP_PORT
+ENTRYPOINT [ "/bin/sh", "-c", "/app/entrypoint.sh" ]
