@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.db.models import Avg, Count
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 
 from .forms import CommentForm
 from .models import Category, Comment, Product
@@ -57,15 +58,21 @@ def product_detail(request, category_slug, pk):
                 comment.save()
                 messages.success(request, "Thank you for your rating.")
 
-            return redirect("product_detail", category_slug=category_slug, pk=product.pk)
+            url = reverse("product_detail", kwargs={"category_slug": category_slug, "pk": product.pk})
+            redirect_url = f"{url}?submitted=1"
+            return redirect(redirect_url)
     else:
-        # Pre-fill form for authenticated user with existing comment (if any)
-        initial = {}
-        if request.user.is_authenticated:
-            existing = product.comments.filter(user=request.user).first()
-            if existing:
-                initial = {"rating": existing.rating, "text": existing.text}
-        form = CommentForm(initial=initial)
+        # If we just submitted a review, clear the form so the user starts from blank
+        if request.GET.get("submitted"):
+            form = CommentForm()
+        else:
+            # Pre-fill form for authenticated user with existing comment (if any)
+            initial = {}
+            if request.user.is_authenticated:
+                existing = product.comments.filter(user=request.user).first()
+                if existing:
+                    initial = {"rating": existing.rating, "text": existing.text}
+            form = CommentForm(initial=initial)
 
     return render(
         request,

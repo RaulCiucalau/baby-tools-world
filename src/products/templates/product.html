@@ -39,6 +39,20 @@
           {% endif %}
         {% endwith %}
 
+        <div class="mb-3 d-flex flex-column">
+          <strong>Product Tags:</strong>
+  
+          <div class="mt-1">
+            {% if product.tags.exists %}
+              {% for tag in product.tags.all %}
+                <span class="badge bg-secondary">{{ tag.name }}</span>
+              {% endfor %}
+            {% else %}
+              <span class="text-muted" title="No tags available">No tags available</span>
+            {% endif %}
+          </div>
+        </div>
+
         <div class="btn btn-primary btn-center mt-auto">Buy now</div>
       </div>
 
